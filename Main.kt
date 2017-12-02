@@ -14,20 +14,27 @@ fun main(args: Array<String>){
     }
 
     lineList.forEach{
-        var small = 10000
-        var big = 0
+        val intList = it.split(" , ")
 
-        it.split(" , ").forEach {
-            if(it.toInt() < small)
-                small = it.toInt()
+        for(x1 in intList.indices){
+            loop@for(x2 in (x1+1 until intList.size)){
+                if(intList[x1].toInt() >= intList[x2].toInt()) {
+                    if(intList[x1].toInt() % intList[x2].toInt() == 0){
+                        println("Added value ${intList[x1].toInt() / intList[x2].toInt()} to sum")
 
-            if(it.toInt() > big)
-                big = it.toInt()
+                        sum += intList[x1].toInt() / intList[x2].toInt()
+
+                        continue@loop
+                    }
+                }
+
+                if(intList[x2].toInt() % intList[x1].toInt() == 0){ //SWAP
+                    println("Added value ${intList[x2].toInt() / intList[x1].toInt()} to sum")
+
+                    sum += intList[x2].toInt() / intList[x1].toInt()
+                }
+            }
         }
-
-        sum += (big - small)
-
-        println("Difference: ${big - small} : $big - $small")
     }
 
     println("\nEnd! Sum is: $sum")
