@@ -9,25 +9,24 @@ fun main(args: Array<String>){
 
     println(inputString)
 
-    loop@ for(i in inputString.indices){
-        if(i < inputString.length-1) {
-            if (inputString[i] == inputString[i + 1]){
-                println("Iterator: $i ... ${inputString.length-1}")
 
-                sum += (inputString[i].toString()).toInt()
+    var secondPosition: Int
+    var iterator = 0
 
-                println(" ++ Added sum: $sum (${(inputString[i].toString()).toInt()} and ${(inputString[i+1].toString()).toInt()})")
+    for(i in inputString.indices){
+        if(inputString.length/2 + i <= inputString.length-1)
+            secondPosition = inputString.length/2 + i
 
-                continue@loop
-            }
+        else secondPosition = iterator++
+
+
+        println("Iterator: $i ... ${inputString.length/2 + i} and $secondPosition")
+
+        if (inputString[i] == inputString[secondPosition]){
+            sum += (inputString[i].toString()).toInt()
+
+            println(" ++ Added sum: $sum (${inputString[i]} and ${inputString[secondPosition]})")
         }
-    }
-
-    println("Iterator: ${inputString.length-1} ... 0")
-    if (inputString[inputString.length-1] == inputString[0]){
-        sum += (inputString[inputString.length-1].toString()).toInt()
-
-        println(" ++ Added sum: $sum (${(inputString[inputString.length-1].toString()).toInt()} and ${(inputString[0].toString()).toInt()})")
     }
 
     println("\nEnd! Sum is: $sum")
