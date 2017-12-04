@@ -1,41 +1,105 @@
-import java.io.File
-import java.io.InputStream
+enum class Direction {
+    RIGHT, UP, LEFT, DOWN
+}
 
-fun main(args: Array<String>){
-    var sum = 0
+fun main(args: Array<String>) {
+    val input = 312051
+    var steps = 0
 
-    val inputStream: InputStream = File("res/input.txt").inputStream()
-    val lineList = mutableListOf<String>()
+    var direction: Direction
+    direction = Direction.RIGHT
 
-    (inputStream.bufferedReader()).useLines{
-        lines -> lines.forEach{
-            lineList.add(it)
-        }
-    }
 
-    lineList.forEach{
-        val intList = it.split(" , ")
+    /** Creating a map **/
+    var length = 1
+    var index = 1
+    val list: MutableList<MutableList<Int>> = mutableListOf()
+        list.add(mutableListOf())
+        list.last().add(index) //first element
 
-        for(x1 in intList.indices){
-            loop@for(x2 in (x1+1 until intList.size)){
-                if(intList[x1].toInt() >= intList[x2].toInt()) {
-                    if(intList[x1].toInt() % intList[x2].toInt() == 0){
-                        println("Added value ${intList[x1].toInt() / intList[x2].toInt()} to sum")
+    while(true){
+        when(direction){
+            Direction.RIGHT -> {
+                for (i in (0 until length))
+                    (list.last()).add(++index)
 
-                        sum += intList[x1].toInt() / intList[x2].toInt()
+                direction = Direction.UP
+            }
 
-                        continue@loop
-                    }
-                }
+            Direction.UP -> {
+                list.add(0, mutableListOf())
 
-                if(intList[x2].toInt() % intList[x1].toInt() == 0){ //SWAP
-                    println("Added value ${intList[x2].toInt() / intList[x1].toInt()} to sum")
+                for (i in (list.size - 2 downTo 0))
+                    list[i].add(++index)
 
-                    sum += intList[x2].toInt() / intList[x1].toInt()
-                }
+                length++
+                direction = Direction.LEFT
+            }
+
+            Direction.LEFT -> {
+                for (i in (0 until length))
+                    (list.first()).add(0, ++index)
+
+                direction = Direction.DOWN
+            }
+
+            Direction.DOWN -> {
+                list.add(mutableListOf())
+
+                for (i in (1 until list.size))
+                    list[i].add(0, ++index)
+
+                length++
+                direction = Direction.RIGHT
             }
         }
+
+        if(index >= input)
+            break
     }
 
-    println("\nEnd! Sum is: $sum")
+    /** Searching position (Shitty code, I know :c) **/
+    var firstX = 0
+    var firstY = 0
+    var secondX = 0
+    var secondY = 0
+
+    for (y in list.indices) {
+        for (x in list[y].indices) {
+            if (list[y][x] == 1) {
+                firstX = x
+                firstY = y
+            }
+
+            if (list[y][x] == input) {
+                secondX = x
+                secondY = y
+            }
+
+        }
+    }
+
+    /** Walking on the path **/
+    val vertical = if(firstY < secondY) -1 else 1
+    val horizontal = if(firstX < secondX) -1 else 1
+
+    while(true){
+        if(secondY != firstY){
+            secondY += vertical
+
+            steps++
+        }
+
+        if(secondX != firstX){
+            secondX += horizontal
+
+            steps++
+        }
+
+        if(firstX == secondX && firstY == secondY)
+            break
+    }
+
+    println("End! Steps: $steps")
 }
+
